@@ -14,24 +14,24 @@ sha256sums=('a67c7132f08713427604610595ab102ba73d0e2c2ca6e73355501e4c6d71d7ad')
 
 
 build() {
-	cd "${srcdir}/msp430-gcc-support-files"
+  cd "${srcdir}/msp430-gcc-support-files"
 }
 
 package() {
-	cd "${srcdir}/msp430-gcc-support-files"
+  cd "${srcdir}/msp430-gcc-support-files"
   
   # install linker scripts
-	# binutils does weird stuff and does not look in lib/ldscripts
-	install -dm755 "${pkgdir}/usr/${_target}/lib"
-	for f in *.ld; do
-		install -m644 ${f} "${pkgdir}/usr/${_target}/lib"
-	done
-
+  # binutils does weird stuff and does not look in lib/ldscripts
+  install -dm755 "${pkgdir}/usr/${_target}/lib"
+  for f in *.ld; do
+    install -m644 ${f} "${pkgdir}/usr/${_target}/lib"
+  done
+  
   # install header files
-	install -dm755 "${pkgdir}/usr/${_target}/include"
-	for f in *.h; do
-		install -m644 ${f} "${pkgdir}/usr/${_target}/include"
-	done
+  install -dm755 "${pkgdir}/usr/${_target}/include"
+  for f in *.h; do
+    install -m644 ${f} "${pkgdir}/usr/${_target}/include"
+  done
 }
 
 # vim:set ts=2 sw=2 et:
