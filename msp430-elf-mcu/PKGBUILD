@@ -1,4 +1,4 @@
-# Maintainer: Orlando Arias <tron>
+# Maintainer: Orlando Arias <orlandoarias at gmail <dot> com>
 
 _target=msp430-elf
 pkgname=${_target}-mcu
@@ -9,12 +9,23 @@ arch=('any')
 url="http://www.ti.com/tool/msp430-gcc-opensource"
 license=('custom')
 options=('!strip' 'staticlibs' 'emptydirs')
-source=(http://software-dl.ti.com/msp430/msp430_public_sw/mcu/msp430/MSPGCC/latest/exports/msp430-gcc-support-files.zip)
-sha256sums=('a67c7132f08713427604610595ab102ba73d0e2c2ca6e73355501e4c6d71d7ad')
+source=(http://software-dl.ti.com/msp430/msp430_public_sw/mcu/msp430/MSPGCC/latest/exports/msp430-gcc-support-files.zip
+        license)
+sha256sums=('a67c7132f08713427604610595ab102ba73d0e2c2ca6e73355501e4c6d71d7ad'
+            'cd344f1a8da5c24768fbcc3494ad12b9880a82097dfb5a4d63d2a52f2833cc38')
 
 
 build() {
   cd "${srcdir}/msp430-gcc-support-files"
+  # https://sourceware.org/bugzilla/show_bug.cgi?id=17940
+  # some linker scripts are missing the necessary debug_line the linker expects
+  for f in *.ld; do
+    echo -n "Modifying linker script ${f}... "
+    sed -i \
+      "s|(\.debug_line)|(\.debug_line \.debug_line\.\* \.debug_line_end)|g" \
+      ${f} 
+    [[ $? = "0" ]] && echo "ok" || echo "fail"
+  done
 }
 
 package() {
@@ -32,6 +43,10 @@ package() {
   for f in *.h; do
     install -m644 ${f} "${pkgdir}/usr/${_target}/include"
   done
+
+  # copy license file
+  install -dm755 "${pkgdir}/usr/share/licenses/msp430-elf-mcu"
+  install -m644 ../license "${pkgdir}/usr/share/licenses/msp430-elf-mcu"
 }
 
 # vim:set ts=2 sw=2 et:

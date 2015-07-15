@@ -35,7 +35,6 @@ sha256sums=('22defc65cfa3ef2a3395faaea75d6331c6e62ea5dfacfed3e2ec17b08c882923'
 prepare() {
   cd "${srcdir}/binutils-${_pkgver}"
   # https://sourceware.org/bugzilla/show_bug.cgi?id=17940
-  # does not seem like it is fixed
   patch -p1 < ../bfd-fix.patch
   [[ -d binutils-build ]] && rm -rf binutils-build
   mkdir binutils-build
